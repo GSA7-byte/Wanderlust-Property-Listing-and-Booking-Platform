@@ -1,5 +1,4 @@
 const monngoose = require('mongoose');
-const { create } = require('./listing');
 const Schema = monngoose.Schema;
 
 const reviewSchema = new Schema({
@@ -8,7 +7,7 @@ const reviewSchema = new Schema({
         min: 1,
         max: 5
     },
-    comment: String,   
+    comment: String,
     createdAt: {
         type: Date,
         default: Date.now

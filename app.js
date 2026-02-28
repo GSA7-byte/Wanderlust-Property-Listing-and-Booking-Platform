@@ -15,11 +15,11 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 
-const listingRouter = require("./routes/listing.js"); 
+const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+const MONGO_URL = process.env.ATLASDB_URL || "mongodb://127.0.0.1:27017/wanderlust";
 
 main()
   .then(() => {
@@ -41,14 +41,18 @@ app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "public")));
 
 const sessionOptions = {
+<<<<<<< HEAD
   secret: "thisshouldbeabettersecret!",
+=======
+  secret: process.env.SECRET || "thisshouldbeabettersecret!",
+>>>>>>> 98d04838229460b8d5296ed7f6787747dba95782
   resave: false,
   saveUninitialized: true,
   cookie:{
     httpOnly: true,
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
     maxAge: 1000 * 60 * 60 * 24 * 7,
-  },  
+  },
 };
 
 app.get("/", (req, res) => {
@@ -70,12 +74,6 @@ app.use((req, res, next) => {
   res.locals.currentUser = req.user;
   next();
 });
-
-// app.get("/demouser", async (req, res) => {
-//   let demoUser = new User({ username: "demouser", email: "demouser@example.com" });
-//   const registeredUser = await User.register(demoUser, "demopassword");
-//   res.send(registeredUser);
-// });
 
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
