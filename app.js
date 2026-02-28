@@ -10,17 +10,16 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
 const session = require("express-session");
-const MongoStore = require('connect-mongo').default;
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 
-const listingRouter = require("./routes/listing.js"); 
+const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
+const MONGO_URL = process.env.ATLASDB_URL || "mongodb://127.0.0.1:27017/wanderlust";
 
 main()
   .then(() => {
@@ -41,29 +40,20 @@ app.use(methodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "public")));
 
-const store = MongoStore.create({
-  mongoUrl: MONGO_URL,
-  touchAfter: 24 * 60 * 60,
-  crypto: {
-    secret: process.env.SECRET,
-  },
-});
-
-store.on("error", function (e) {
-  console.log("SESSION STORE ERROR", e);
-});
-
 const sessionOptions = {
-  store,
-  secret: process.env.SECRET,
+  secret: process.env.SECRET || "thisshouldbeabettersecret!",
   resave: false,
   saveUninitialized: true,
   cookie:{
     httpOnly: true,
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
     maxAge: 1000 * 60 * 60 * 24 * 7,
-  },  
+  },
 };
+
+app.get("/", (req, res) => {
+  res.redirect("/listings");
+});
 
 app.use(session(sessionOptions));
 app.use(flash());
@@ -81,17 +71,11 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.get("/demouser", async (req, res) => {
-//   let demoUser = new User({ username: "demouser", email: "demouser@example.com" });
-//   const registeredUser = await User.register(demoUser, "demopassword");
-//   res.send(registeredUser);
-// });
-
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
 
-app.all("{*path}", (req, res, next) => {
+app.all("*splat", (req, res, next) => {
   next(new ExpressError(404, "Page Not Found"));
 });
 
