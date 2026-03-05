@@ -18,7 +18,7 @@ if (listing.geometry && listing.geometry.coordinates.length) {
     .setLngLat(coordinates)
     .setPopup(
       new mapboxgl.Popup({ offset: 25 })
-        .setHTML(`<h5><i>${listing.title}</i></h5><p>Exact will be location provided after booking</p>`)
+        .setHTML(`<h5><i>${listing.title}</i></h5><p>Exact location will be provided after booking</p>`)
     )
     .addTo(map);
 }
