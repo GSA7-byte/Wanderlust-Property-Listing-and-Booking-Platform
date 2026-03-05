@@ -17,7 +17,7 @@
     />
     <div class="card-body">
       <p class="card-text">
-        <b>Owner:</b> <i><%= listing.owner.username ? listing.owner.username : "Anonymous" %></i><br>
+        <b>Owner:</b> <i><%= listing.owner && listing.owner.username ? listing.owner.username : "Anonymous" %></i><br>
         <%= listing.description %> <br />
         ₹ <%= listing.price ? listing.price.toLocaleString("en-IN") : "N/A" %> <br />
         <%= listing.location %> <br />
@@ -26,7 +26,7 @@
     </div>
   </div>
 
-  <% if(currentUser && currentUser._id.equals(listing.owner._id)) { %>
+  <% if(currentUser && listing.owner && currentUser._id.equals(listing.owner._id)) { %>
     <div class="show-btns">
       <a
         href="/listings/<%= listing._id %>/edit"
@@ -86,7 +86,7 @@
           <% listing.reviews.forEach(review => { %>
             <div class="card col-5 ms-3 mb-3 review-card">
               <div class="card-body">
-                <h5 class="card-title">@<%= review.author.username ? review.author.username : "Anonymous" %></h5>
+                <h5 class="card-title">@<%= review.author && review.author.username ? review.author.username : "Anonymous" %></h5>
                 <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
                 <p class="card-text"><%= review.comment %></p>
               </div>
