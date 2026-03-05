@@ -19,7 +19,7 @@ const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
-const MONGO_URL = process.env.MONGO_URL;;
+const MONGO_URL = process.env.ATLASDB_URL;
 
 main()
   .then(() => {
@@ -90,6 +90,7 @@ app.use((err, req, res, next) => {
   res.status(statusCode).render("error", { message, err });
 });
 
-app.listen(8080, () => {
-  console.log("server is listening to port 8080");
+const port = process.env.PORT || 8080;
+app.listen(port, () => {
+  console.log(`server is listening to port ${port}`);
 });
