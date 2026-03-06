@@ -13,5 +13,6 @@ A full-stack web application that enables users to list, discover, and book vaca
 - Add, edit, or delete property listings
 - Book properties and leave reviews
 - Check price after taxes
+- Interactive map with custom markers and automated geocoding for property locations (Mapbox).
 - Responsive design for mobile and desktop
 - Cloud database integration (MongoDB Atlas)
